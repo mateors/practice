@@ -19,9 +19,11 @@ func (r *AnytypeReader) Pp() *Anytype {
 
 func NewAnytype() *AnytypeReader {
 
-	return &AnytypeReader{
-		name: "Billah",
-	}
+	// return &AnytypeReader{
+	// 	name: "Billah",
+	// }
+	at := &Anytype{name: "Mostain"}
+	return (*AnytypeReader)(at)
 }
 
 func main() {
