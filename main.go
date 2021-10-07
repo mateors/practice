@@ -3,6 +3,7 @@ package main
 import (
 	"fmt"
 	"os"
+	"time"
 )
 
 type Anytype struct {
@@ -79,4 +80,31 @@ func main() {
 		fmt.Println("no reward")
 
 	}
+
+	//example-4 select channel
+	var ch1 = make(chan int)
+	var ch2 = make(chan int)
+	var a, b int
+
+	go func() {
+		time.Sleep(1 * time.Microsecond)
+		ch1 <- 10
+	}()
+
+	go func() {
+		time.Sleep(2 * time.Microsecond)
+		b = <-ch2
+	}()
+
+	select { // the first operation that completes is selected
+
+	case a = <-ch1: //receiving from a channel
+		fmt.Println(a)
+
+	case ch2 <- 20: //sending to a channel
+		fmt.Println(b)
+	}
+
+	fmt.Println(a, b)
+
 }
