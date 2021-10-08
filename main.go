@@ -2,8 +2,9 @@ package main
 
 import (
 	"fmt"
-	"os"
-	"path/filepath"
+	"os/exec"
+	"strings"
+	"time"
 )
 
 type Anytype struct {
@@ -106,30 +107,106 @@ func main() {
 	// fmt.Println(a, b)
 
 	//example -5 mini cmd app which count all the folders and files in a given path
-	if len(os.Args) != 2 { // ensure path is specified
-		fmt.Println("Please specify a path.")
-		return
-	}
-	root, err := filepath.Abs(os.Args[1]) // get absolute path
-	if err != nil {
-		fmt.Println("Cannot get absolute path:", err)
-		return
-	}
-	fmt.Println("Listing files in", root)
-	var c struct {
-		files int
-		dirs  int
-	}
-	filepath.Walk(root, func(path string, info os.FileInfo, err error) error {
-		// walk the tree to count files and folders
-		if info.IsDir() {
-			c.dirs++
-		} else {
-			c.files++
+	// if len(os.Args) != 2 { // ensure path is specified
+	// 	fmt.Println("Please specify a path.")
+	// 	return
+	// }
+	// root, err := filepath.Abs(os.Args[1]) // get absolute path
+	// if err != nil {
+	// 	fmt.Println("Cannot get absolute path:", err)
+	// 	return
+	// }
+	// fmt.Println("Listing files in", root)
+	// var c struct {
+	// 	files int
+	// 	dirs  int
+	// }
+	// filepath.Walk(root, func(path string, info os.FileInfo, err error) error {
+	// 	// walk the tree to count files and folders
+	// 	if info.IsDir() {
+	// 		c.dirs++
+	// 	} else {
+	// 		c.files++
+	// 	}
+	// 	fmt.Println("-", path)
+	// 	return nil
+	// })
+	// fmt.Printf("Total: %d files in %d directories", c.files, c.dirs)
+
+	//example-6
+	// args := "ls -la"
+	// argSlc := strings.Split(args, " ")
+	// appName := argSlc[0]
+	// cmd := exec.Command(appName, argSlc[1:]...)
+
+	// stderr, _ := cmd.StderrPipe()
+	// cmd.Start()
+
+	// scanner := bufio.NewScanner(stderr)
+	// scanner.Split(bufio.ScanWords)
+	// for scanner.Scan() {
+	// 	m := scanner.Text()
+	// 	fmt.Println(m)
+	// }
+	// cmd.Wait()
+
+	//example-7
+
+	cmdName := "passwd mostain" //apt search php7.2
+	cmdArgs := strings.Fields(cmdName)
+
+	cmd := exec.Command(cmdArgs[0], cmdArgs[1:]...)
+	stdout, _ := cmd.StdoutPipe()
+	cmd.Start()
+
+	go func() {
+		oneByte := make([]byte, 1024)
+		for {
+			_, err := stdout.Read(oneByte)
+			if err != nil {
+				break
+			}
+			fmt.Printf("%v \n", string(oneByte))
 		}
-		fmt.Println("-", path)
-		return nil
-	})
-	fmt.Printf("Total: %d files in %d directories", c.files, c.dirs)
+	}()
+
+	time.Sleep(time.Second * 2)
+
+	go func() {
+		oneByte := make([]byte, 1024)
+		for {
+			_, err := stdout.Read(oneByte)
+			if err != nil {
+				break
+			}
+			fmt.Printf("%v \n", string(oneByte))
+		}
+	}()
+	time.Sleep(time.Second * 2)
+	//example-8
+	// cmdName := "passwd mostain" //ping 127.0.0.1
+	// cmdArgs := strings.Fields(cmdName)
+
+	// cmd := exec.Command(cmdArgs[0], cmdArgs[1:]...)
+	// stdout, _ := cmd.StdoutPipe()
+	// cmd.Start()
+	// oneByte := make([]byte, 100)
+	// num := 1
+	// for {
+	// 	_, err := stdout.Read(oneByte)
+	// 	if err != nil {
+	// 		fmt.Printf(err.Error())
+	// 		break
+	// 	}
+	// 	r := bufio.NewReader(stdout)
+	// 	line, _, _ := r.ReadLine()
+	// 	fmt.Println(string(line))
+	// 	num = num + 1
+	// 	if num > 3 {
+	// 		os.Exit(0)
+	// 	}
+	// }
+
+	// cmd.Wait()
 
 }
