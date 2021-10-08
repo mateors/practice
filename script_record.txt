@@ -17,3 +17,10 @@ uid=1000(mostain) gid=1000(mostain) groups=1000(mostain),4(adm),5(tty),20(dialou
 exit
 
 Script done on 2021-10-08 05:51:45+06:00 [COMMAND_EXIT_CODE="0"]
+
+
+	type Data struct {
+		Out []byte
+	}
+	
+	https://www.cyberciti.biz/faq/linux-bash-exit-status-set-exit-statusin-bash/

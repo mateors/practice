@@ -1,10 +1,13 @@
 package main
 
 import (
+	"bytes"
 	"fmt"
+	"io"
+	"io/ioutil"
 	"os"
-
-	"github.com/go-cmd/cmd"
+	"path/filepath"
+	"strings"
 )
 
 type Anytype struct {
@@ -242,47 +245,150 @@ func main() {
 
 	//example -10
 	// Disable output buffering, enable streaming
-	cmdOptions := cmd.Options{
-		Buffered:  true,
-		Streaming: true,
-	}
+	// cmdOptions := cmd.Options{
+	// 	Buffered:  true,
+	// 	Streaming: true,
+	// }
 
-	// Create Cmd with options
-	envCmd := cmd.NewCmdOptions(cmdOptions, "passwd", "mostain") //./print-some-lines
+	// // Create Cmd with options
+	// envCmd := cmd.NewCmdOptions(cmdOptions, "passwd", "mostain") //./print-some-lines
 
-	// Print STDOUT and STDERR lines streaming from Cmd
-	doneChan := make(chan struct{})
-	go func() {
-		defer close(doneChan)
-		// Done when both channels have been closed
-		// https://dave.cheney.net/2013/04/30/curious-channels
-		for envCmd.Stdout != nil || envCmd.Stderr != nil {
-			select {
-			case line, open := <-envCmd.Stdout:
-				if !open {
-					envCmd.Stdout = nil
-					continue
-				}
-				fmt.Println(line)
+	// // Print STDOUT and STDERR lines streaming from Cmd
+	// doneChan := make(chan struct{})
+	// go func() {
+	// 	defer close(doneChan)
+	// 	// Done when both channels have been closed
+	// 	// https://dave.cheney.net/2013/04/30/curious-channels
+	// 	for envCmd.Stdout != nil || envCmd.Stderr != nil {
+	// 		select {
+	// 		case line, open := <-envCmd.Stdout:
+	// 			if !open {
+	// 				envCmd.Stdout = nil
+	// 				continue
+	// 			}
+	// 			fmt.Println(line)
 
-			case line, open := <-envCmd.Stderr:
-				if !open {
-					envCmd.Stderr = nil
-					continue
-				}
-				fmt.Fprintln(os.Stderr, line)
-			}
-		}
-	}()
+	// 		case line, open := <-envCmd.Stderr:
+	// 			if !open {
+	// 				envCmd.Stderr = nil
+	// 				continue
+	// 			}
+	// 			fmt.Fprintln(os.Stderr, line)
+	// 		}
+	// 	}
+	// }()
 
-	// Run and wait for Cmd to return, discard Status
-	<-envCmd.Start()
-	//fmt.Println(co)
+	// // Run and wait for Cmd to return, discard Status
+	// <-envCmd.Start()
+	// //fmt.Println(co)
 
-	// Wait for goroutine to print everything
-	<-doneChan
+	// // Wait for goroutine to print everything
+	// <-doneChan
 	//fmt.Println(dc)
 
 	//time.Sleep(time.Second * 3)
 
+	//example-11
+	//
+	//cmd := exec.Command("passwd", "mostain")
+	// stdoutPipe, _ := cmd.StdoutPipe()
+	// stdoutReader := bufio.NewReader(stdoutPipe)
+	// cmd.Start()
+
+	// Datas := make(chan Data, 100)
+	// go dataProcessor(Datas)
+
+	// bufioReader := bufio.NewReader(stdoutReader)
+	// for {
+
+	// 	//r := bufio.NewReader(stdoutPipe)
+	// 	output, _, err := bufioReader.ReadLine()
+	// 	if err != nil {
+	// 		fmt.Println("err:", err)
+	// 	}
+	// 	fmt.Println(string(output))
+	// 	var tempData Data
+	// 	tempData.Out = output
+	// 	if err != nil || err == io.EOF {
+	// 		break
+	// 	}
+	// 	Datas <- tempData
+	// }
+
+	//example-12
+	if len(os.Args) < 3 {
+		fmt.Println("Please specify a path and a search string.")
+		return
+	}
+	root, err := filepath.Abs(os.Args[1]) // get absolute path
+	if err != nil {
+		fmt.Println("Cannot get absolute path:", err)
+		return
+	}
+	q := []byte(strings.Join(os.Args[2:], " "))
+	fmt.Printf("Searching for %q in %s...\n", q, root)
+	err = filepath.Walk(root, func(path string, info os.FileInfo,
+		err error) error {
+		if info.IsDir() {
+			return nil
+		}
+		fmt.Println(path)
+		f, err := os.Open(path)
+		if err != nil {
+			return err
+		}
+		defer f.Close()
+		_, err = ioutil.ReadAll(io.TeeReader(f, queryWriter{q, os.Stdout}))
+		return err
+	})
+	if err != nil {
+		fmt.Println(err)
+	}
+
+}
+
+type Data struct {
+	Out []byte
+}
+
+func dataProcessor(Datas <-chan Data) {
+	for {
+		select {
+		case data := <-Datas:
+			fmt.Println(">>", string(data.Out))
+		default:
+			continue
+		}
+	}
+}
+
+type queryWriter struct {
+	Query []byte
+	io.Writer
+}
+
+func (q queryWriter) Write(b []byte) (n int, err error) {
+	lines := bytes.Split(b, []byte{'\n'})
+	l := len(q.Query)
+	for _, b := range lines {
+		i := bytes.Index(b, q.Query)
+		if i == -1 {
+			continue
+		}
+		for _, s := range [][]byte{
+			b[:i],              // what's before the match
+			[]byte("\x1b[31m"), //star red color
+			b[i : i+l],         // match
+			[]byte("\x1b[39m"), // default color
+			b[i+l:],            // whatever is left
+		} {
+			v, err := q.Writer.Write(s)
+			n += v
+			if err != nil {
+				return 0, err
+			}
+		}
+		fmt.Fprintln(q.Writer)
+	}
+	return len(b), nil
 }
