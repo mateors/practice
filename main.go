@@ -2,7 +2,7 @@ package main
 
 import (
 	"fmt"
-	"time"
+	"os"
 
 	"github.com/go-cmd/cmd"
 )
@@ -200,39 +200,89 @@ func main() {
 
 	//example -9
 	//findCmd := cmd.NewCmd("find", "/", "-name", "v2ray")
-	findCmd := cmd.NewCmd("passwd", "mostain")
-	statusChan := findCmd.Start() // non-blocking
+	//findCmd := cmd.NewCmd("passwd", "mostain")
+	//statusChan := <-findCmd.Start() // non-blocking
+	//fmt.Println(statusChan, findCmd.Stderr)
 
-	ticker := time.NewTicker(2 * time.Second)
+	// Print each line of STDOUT from Cmd
+	// for _, line := range statusChan.Stdout {
+	// 	fmt.Println(line)
+	// }
 
-	// Print last line of stdout every 2s
+	// ticker := time.NewTicker(2 * time.Second)
+
+	// // Print last line of stdout every 2s
+	// go func() {
+	// 	for range ticker.C {
+	// 		status := findCmd.Status()
+	// 		n := len(status.Stdout)
+	// 		fmt.Println(status.Stdout[n-1])
+	// 	}
+	// }()
+
+	// // Stop command after 1 hour
+	// go func() {
+	// 	<-time.After(1 * time.Hour)
+	// 	findCmd.Stop()
+	// }()
+
+	// // Check if command is done
+	// select {
+	// case finalStatus := <-statusChan:
+	// 	// done
+	// 	fmt.Println("done:", finalStatus)
+	// default:
+	// 	// no, still running
+	// 	fmt.Println("running...")
+	// }
+
+	// // Block waiting for command to exit, be stopped, or be killed
+	// finalStatus := <-statusChan
+	// fmt.Println(finalStatus)
+
+	//example -10
+	// Disable output buffering, enable streaming
+	cmdOptions := cmd.Options{
+		Buffered:  true,
+		Streaming: true,
+	}
+
+	// Create Cmd with options
+	envCmd := cmd.NewCmdOptions(cmdOptions, "passwd", "mostain") //./print-some-lines
+
+	// Print STDOUT and STDERR lines streaming from Cmd
+	doneChan := make(chan struct{})
 	go func() {
-		for range ticker.C {
-			status := findCmd.Status()
-			n := len(status.Stdout)
-			fmt.Println(status.Stdout[n-1])
+		defer close(doneChan)
+		// Done when both channels have been closed
+		// https://dave.cheney.net/2013/04/30/curious-channels
+		for envCmd.Stdout != nil || envCmd.Stderr != nil {
+			select {
+			case line, open := <-envCmd.Stdout:
+				if !open {
+					envCmd.Stdout = nil
+					continue
+				}
+				fmt.Println(line)
+
+			case line, open := <-envCmd.Stderr:
+				if !open {
+					envCmd.Stderr = nil
+					continue
+				}
+				fmt.Fprintln(os.Stderr, line)
+			}
 		}
 	}()
 
-	// Stop command after 1 hour
-	go func() {
-		<-time.After(1 * time.Hour)
-		findCmd.Stop()
-	}()
+	// Run and wait for Cmd to return, discard Status
+	<-envCmd.Start()
+	//fmt.Println(co)
 
-	// Check if command is done
-	select {
-	case finalStatus := <-statusChan:
-		// done
-		fmt.Println("done:", finalStatus)
-	default:
-		// no, still running
-		fmt.Println("running...")
-	}
+	// Wait for goroutine to print everything
+	<-doneChan
+	//fmt.Println(dc)
 
-	//time.Sleep(time.Second * 10)
-	// Block waiting for command to exit, be stopped, or be killed
-	finalStatus := <-statusChan
-	fmt.Println(finalStatus)
+	//time.Sleep(time.Second * 3)
 
 }
