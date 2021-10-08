@@ -2,9 +2,9 @@ package main
 
 import (
 	"fmt"
-	"os/exec"
-	"strings"
 	"time"
+
+	"github.com/go-cmd/cmd"
 )
 
 type Anytype struct {
@@ -152,37 +152,26 @@ func main() {
 
 	//example-7
 
-	cmdName := "passwd mostain" //apt search php7.2
-	cmdArgs := strings.Fields(cmdName)
+	// cmdName := "passwd mostain" //apt search php7.2
+	// cmdArgs := strings.Fields(cmdName)
 
-	cmd := exec.Command(cmdArgs[0], cmdArgs[1:]...)
-	stdout, _ := cmd.StdoutPipe()
-	cmd.Start()
+	// cmd := exec.Command(cmdArgs[0], cmdArgs[1:]...)
+	// stdout, _ := cmd.StdoutPipe()
+	// cmd.Start()
 
-	go func() {
-		oneByte := make([]byte, 1024)
-		for {
-			_, err := stdout.Read(oneByte)
-			if err != nil {
-				break
-			}
-			fmt.Printf("%v \n", string(oneByte))
-		}
-	}()
+	// go func() {
+	// 	oneByte := make([]byte, 1024)
+	// 	for {
+	// 		_, err := stdout.Read(oneByte)
+	// 		if err != nil {
+	// 			break
+	// 		}
+	// 		fmt.Printf("%v \n", string(oneByte))
+	// 	}
+	// }()
 
-	time.Sleep(time.Second * 2)
+	// time.Sleep(time.Second * 2)
 
-	go func() {
-		oneByte := make([]byte, 1024)
-		for {
-			_, err := stdout.Read(oneByte)
-			if err != nil {
-				break
-			}
-			fmt.Printf("%v \n", string(oneByte))
-		}
-	}()
-	time.Sleep(time.Second * 2)
 	//example-8
 	// cmdName := "passwd mostain" //ping 127.0.0.1
 	// cmdArgs := strings.Fields(cmdName)
@@ -208,5 +197,42 @@ func main() {
 	// }
 
 	// cmd.Wait()
+
+	//example -9
+	//findCmd := cmd.NewCmd("find", "/", "-name", "v2ray")
+	findCmd := cmd.NewCmd("passwd", "mostain")
+	statusChan := findCmd.Start() // non-blocking
+
+	ticker := time.NewTicker(2 * time.Second)
+
+	// Print last line of stdout every 2s
+	go func() {
+		for range ticker.C {
+			status := findCmd.Status()
+			n := len(status.Stdout)
+			fmt.Println(status.Stdout[n-1])
+		}
+	}()
+
+	// Stop command after 1 hour
+	go func() {
+		<-time.After(1 * time.Hour)
+		findCmd.Stop()
+	}()
+
+	// Check if command is done
+	select {
+	case finalStatus := <-statusChan:
+		// done
+		fmt.Println("done:", finalStatus)
+	default:
+		// no, still running
+		fmt.Println("running...")
+	}
+
+	//time.Sleep(time.Second * 10)
+	// Block waiting for command to exit, be stopped, or be killed
+	finalStatus := <-statusChan
+	fmt.Println(finalStatus)
 
 }
