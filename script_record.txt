@@ -1,0 +1,19 @@
+Script started on 2021-10-08 05:50:49+06:00 [TERM="xterm-256color" TTY="/dev/pts/0" COLUMNS="143" LINES="38"]
+]0;mostain@mostain-ubuntu-pc: ~/go/src/practice[01;32mmostain@mostain-ubuntu-pc[00m:[01;34m~/go/src/practice[00m$ ls -la
+total 48
+drwxrwxr-x  3 mostain mostain  4096 Oct  8 05:43 [0m[01;34m.[0m
+drwxrwxr-x 20 mostain mostain  4096 Oct  5 22:41 [01;34m..[0m
+drwxrwxr-x  8 mostain mostain  4096 Oct  7 13:12 [01;34m.git[0m
+-rw-rw-r--  1 mostain mostain  2850 Oct  7 13:13 main.go
+-rw-rw-r--  1 mostain mostain 26930 Oct  7 12:31 main.o
+-rw-rw-r--  1 mostain mostain   339 Oct  8 05:47 output.txt
+]0;mostain@mostain-ubuntu-pc: ~/go/src/practice[01;32mmostain@mostain-ubuntu-pc[00m:[01;34m~/go/src/practice[00m$ whoami
+mostain
+]0;mostain@mostain-ubuntu-pc: ~/go/src/practice[01;32mmostain@mostain-ubuntu-pc[00m:[01;34m~/go/src/practice[00m$ which bash
+/usr/bin/bash
+]0;mostain@mostain-ubuntu-pc: ~/go/src/practice[01;32mmostain@mostain-ubuntu-pc[00m:[01;34m~/go/src/practice[00m$ id
+uid=1000(mostain) gid=1000(mostain) groups=1000(mostain),4(adm),5(tty),20(dialout),24(cdrom),27(sudo),30(dip),46(plugdev),120(lpadmin),131(lxd),132(sambashare)
+]0;mostain@mostain-ubuntu-pc: ~/go/src/practice[01;32mmostain@mostain-ubuntu-pc[00m:[01;34m~/go/src/practice[00m$ exit
+exit
+
+Script done on 2021-10-08 05:51:45+06:00 [COMMAND_EXIT_CODE="0"]
