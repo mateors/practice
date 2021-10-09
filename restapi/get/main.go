@@ -83,9 +83,9 @@ func main() {
 
 	s := time.Now()
 
-	//GetAllDomains()
-	dom, err := domainInfo("fulermela.org")
-	fmt.Println(dom, err)
+	GetAllDomains()
+	//dom, err := domainInfo("fulermela.org")
+	//fmt.Println(dom, err)
 
 	//customGetRequest("http://mateors.com")
 
