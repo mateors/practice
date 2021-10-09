@@ -3,12 +3,21 @@ package main
 import (
 	"fmt"
 	"io"
-	"io/ioutil"
 	"net/http"
 	"os"
+	"strconv"
 )
 
 func init() {
+
+	size, err := getContentLength("https://automan.biz/resources/images/contact.png")
+	fmt.Println(size, err)
+
+	os.Exit(0)
+
+}
+
+func twoDimensionalArray() {
 
 	//two dimension array
 	var sections = make([][2]int, 10) //declaration & initialization with 0 0 value
@@ -35,25 +44,27 @@ func init() {
 
 	fmt.Println(sections)
 
-	req, err := http.NewRequest("HEAD", "https://automan.biz/resources/images/contact.png", nil)
+}
+
+func getContentLength(fileUrl string) (uint64, error) {
+
+	req, err := http.NewRequest("HEAD", fileUrl, nil)
 	if err != nil {
-		fmt.Println(err)
+		return 0, err
 	}
-	//req.Header.Set("")
+	req.Header.Set("User-Agent", "MateorsDownloader")
 
 	resp, err := http.DefaultClient.Do(req)
 	if err != nil {
-		fmt.Println(err)
+		return 0, err
 	}
 
 	//verifying is really body empty or not
-	bs, err := ioutil.ReadAll(resp.Body)
-	fmt.Println(bs, err)
-
+	// bs, err := ioutil.ReadAll(resp.Body)
+	// fmt.Println(bs, err)
 	length := resp.Header.Get("Content-Length")
-	fmt.Println(length)
-	os.Exit(0)
-
+	//fmt.Println(length)
+	return strconv.ParseUint(length, 10, 64)
 }
 
 type cwriter struct {
