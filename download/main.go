@@ -13,6 +13,51 @@ func init() {
 	size, err := getContentLength("https://automan.biz/resources/images/contact.png")
 	fmt.Println(size, err)
 
+	fmt.Println(fmt.Sprintf("%.2f", float64(size/20)))
+
+	eachSectionByteSize := size / 10
+
+	var sections = make([][2]int, 10)
+
+	for i := range sections {
+
+		if i == 0 {
+			sections[i][0] = 0
+			sections[i][1] = int(eachSectionByteSize)
+
+		} else if i == 10-1 {
+
+			first := sections[i-1][1] + 1
+			sections[i][0] = first
+			sections[i][1] = first + int(eachSectionByteSize) - 1
+
+		} else {
+			first := sections[i-1][1] + 1
+			sections[i][0] = first
+			sections[i][1] = first + int(eachSectionByteSize)
+
+		}
+
+		fmt.Println(i, sections[i][0], sections[i][1])
+
+		// if i == 0 {
+		// 	// starting byte of first section
+		// 	sections[i][0] = 0
+		// } else {
+		// 	// starting byte of other sections
+		// 	sections[i][0] = sections[i-1][1] + 1
+		// }
+
+		// if i < d.TotalSections-1 {
+		// 	// ending byte of other sections
+		// 	sections[i][1] = sections[i][0] + eachSize
+		// } else {
+		// 	// ending byte of other sections
+		// 	sections[i][1] = size - 1
+		// }
+
+	}
+
 	os.Exit(0)
 
 }
