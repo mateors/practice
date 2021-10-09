@@ -7,6 +7,17 @@ import (
 	"os"
 )
 
+type cwriter struct {
+	total uint64
+}
+
+func (c *cwriter) Write(p []byte) (n int, err error) {
+	c.total += uint64(len(p)) //32 kb at a time
+	progress := float64(c.total) / (1024 * 1024)
+	fmt.Printf("\rDownloading %f MB..", progress)
+	return len(p), nil
+}
+
 func main() {
 
 	downloadUrl := "https://automan.biz/resources/images/contact.png"
@@ -29,7 +40,8 @@ func main() {
 		return
 	}
 
-	written, err := io.Copy(pf, resp.Body)
+	reader := io.TeeReader(resp.Body, &cwriter{}) //showing progressbar
+	written, err := io.Copy(pf, reader)
 	if err != nil {
 		fmt.Println(err)
 		return
