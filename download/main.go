@@ -13,11 +13,12 @@ func init() {
 	size, err := getContentLength("https://automan.biz/resources/images/contact.png")
 	fmt.Println(size, err)
 
-	fmt.Println(fmt.Sprintf("%.2f", float64(size/20)))
+	var numbverOfSection int = 10
+	//fmt.Println(fmt.Sprintf("%.2f", float64(size/numbverOfSection)))
 
-	eachSectionByteSize := size / 10
+	eachSectionByteSize := size / uint64(numbverOfSection)
 
-	var sections = make([][2]int, 10)
+	var sections = make([][2]int, numbverOfSection)
 
 	for i := range sections {
 
@@ -25,7 +26,7 @@ func init() {
 			sections[i][0] = 0
 			sections[i][1] = int(eachSectionByteSize)
 
-		} else if i == 10-1 {
+		} else if i == numbverOfSection-1 {
 
 			first := sections[i-1][1] + 1
 			sections[i][0] = first
