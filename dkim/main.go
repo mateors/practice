@@ -6,10 +6,52 @@ import (
 	"crypto/x509"
 	"encoding/pem"
 	"fmt"
-	"io/ioutil"
 	"os"
-	"strings"
+	"regexp"
 )
+
+func regexVersion() {
+
+	// 	var re = regexp.MustCompile(`(?mis)^-----BEGIN PUBLIC KEY-----\s((.*)\s)*-----END PUBLIC KEY-----[\s]$`)
+	// 	var str = `-----BEGIN PUBLIC KEY-----
+	// MIIBCgKCAQEAyVdO+Cs1xW2BHYjvvsEF1C4FAVxn/xeMRDMOHoz9amKlezsdPEbW
+	// 79bjOXIbuJceblE77UWPS1tU5Wzkd4YdW9Sf/8zREoP6trw4Md8zDzLYqUGhoH32
+	// GykEaGXyAA8mKN4fHi3Cjq6d0rEIDZ3C6kq94j2slIhKfiLxgrhZtWKORDwBr+Yc
+	// 14sbHN0wgtthGOqMIWeSsDyE7PL//EYEVFxZlISJSoq8rC5ZARRJbqm90FR21ee5
+	// 4+H9oxe78PoAknFdQuriaQYCsblpExaLF5CKzg111bdEkqLvCLRyhIoWUDKpoFE7
+	// ALmfBdQt8eWG0ZgKYGyz+WRkOH1W5tAbUQIDAQAB
+	// -----END PUBLIC KEY-----
+	// `
+
+	// 	for i, match := range re.FindAllStringSubmatch(str, -1) {
+	// 		//fmt.Println(match, "found at index", i)
+	// 		//fmt.Println(i, match)
+	// 		for k, v := range match {
+	// 			fmt.Println(i, k, v)
+	// 		}
+	// 	}
+
+	var re = regexp.MustCompile(`-----\s(((.*\s))*)-----`)
+	var str = `-----BEGIN PUBLIC KEY-----
+MIIBCgKCAQEAyVdO+Cs1xW2BHYjvvsEF1C4FAVxn/xeMRDMOHoz9amKlezsdPEbW
+79bjOXIbuJceblE77UWPS1tU5Wzkd4YdW9Sf/8zREoP6trw4Md8zDzLYqUGhoH32
+GykEaGXyAA8mKN4fHi3Cjq6d0rEIDZ3C6kq94j2slIhKfiLxgrhZtWKORDwBr+Yc
+14sbHN0wgtthGOqMIWeSsDyE7PL//EYEVFxZlISJSoq8rC5ZARRJbqm90FR21ee5
+4+H9oxe78PoAknFdQuriaQYCsblpExaLF5CKzg111bdEkqLvCLRyhIoWUDKpoFE7
+ALmfBdQt8eWG0ZgKYGyz+WRkOH1W5tAbUQIDAQAB
+-----END PUBLIC KEY-----
+`
+	for i, match := range re.FindAllStringSubmatch(str, -1) {
+		for k, v := range match {
+			fmt.Println(i, k, v)
+		}
+	}
+
+	// if len(re.FindStringIndex(str)) > 0 {
+	// 	fmt.Println(re.FindString(str), "found at index", re.FindStringIndex(str)[0])
+	// }
+
+}
 
 func main() {
 
@@ -34,26 +76,30 @@ func main() {
 	// 	// other code what work with parsed line...
 	// }
 
-	file, err := os.Open("mostain.pub")
-	if err != nil {
-		fmt.Println(err)
-	}
+	//method-1 string prefix and suffix
+	// file, err := os.Open("mostain.pub")
+	// if err != nil {
+	// 	fmt.Println(err)
+	// }
 
-	defer file.Close()
+	// defer file.Close()
 
-	bytes, err := ioutil.ReadAll(file)
-	if err != nil {
-		fmt.Println(err)
-	}
+	// bytes, err := ioutil.ReadAll(file)
+	// if err != nil {
+	// 	fmt.Println(err)
+	// }
 
-	newstr := strings.TrimPrefix(string(bytes), "-----BEGIN PUBLIC KEY-----")
-	onlykey := strings.TrimSuffix(newstr, "-----END PUBLIC KEY-----")
+	// newstr := strings.TrimPrefix(string(bytes), "-----BEGIN PUBLIC KEY-----")
+	// onlykey := strings.TrimSuffix(newstr, "-----END PUBLIC KEY-----")
 
-	oneline := strings.ReplaceAll(onlykey, "\n", "")
+	// oneline := strings.ReplaceAll(onlykey, "\n", "")
 
-	fmt.Println(onlykey)
-	fmt.Println()
-	fmt.Println(oneline)
+	// fmt.Println(onlykey)
+	// fmt.Println()
+	// fmt.Println(oneline)
+
+	//method-2 regex
+	regexVersion()
 
 	// pb, rst := pem.Decode(bytes)
 	// pubin, err := x509.ParsePKIXPublicKey(pb.Bytes)
