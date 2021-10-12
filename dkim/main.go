@@ -6,12 +6,60 @@ import (
 	"crypto/x509"
 	"encoding/pem"
 	"fmt"
+	"io/ioutil"
 	"os"
+	"strings"
 )
 
 func main() {
 
-	KeyGenerate("./mostain")
+	//KeyGenerate("./mostain")
+
+	// file, err := os.Open("mostain.pub")
+	// if err != nil {
+	// 	//handle error
+	// 	fmt.Println(err)
+	// 	return
+	// }
+
+	// defer file.Close()
+	// s := bufio.NewScanner(file)
+	// var text string
+
+	// for s.Scan() {
+	// 	readLine := s.Text()
+
+	// 	text += strings.ReplaceAll(readLine, "\n", "")
+	// 	fmt.Println(readLine)
+	// 	// other code what work with parsed line...
+	// }
+
+	file, err := os.Open("mostain.pub")
+	if err != nil {
+		fmt.Println(err)
+	}
+
+	defer file.Close()
+
+	bytes, err := ioutil.ReadAll(file)
+	if err != nil {
+		fmt.Println(err)
+	}
+
+	newstr := strings.TrimPrefix(string(bytes), "-----BEGIN PUBLIC KEY-----")
+	onlykey := strings.TrimSuffix(newstr, "-----END PUBLIC KEY-----")
+
+	oneline := strings.ReplaceAll(onlykey, "\n", "")
+
+	fmt.Println(onlykey)
+	fmt.Println()
+	fmt.Println(oneline)
+
+	// pb, rst := pem.Decode(bytes)
+	// pubin, err := x509.ParsePKIXPublicKey(pb.Bytes)
+	// pk := pubin.(*rsa.PublicKey)
+
+	//fmt.Println(pb.Type, bytes, rst)
 }
 
 func KeyGenerate(path string) {
