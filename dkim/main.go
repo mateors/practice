@@ -19,7 +19,10 @@ func KeyGenerate(path string) {
 	bitSize := 2048
 
 	key, err := rsa.GenerateKey(reader, bitSize)
-	checkError(err)
+	if err != nil {
+		fmt.Println("Fatal error ", err.Error())
+		return
+	}
 
 	publicKey := key.PublicKey
 
@@ -31,8 +34,13 @@ func KeyGenerate(path string) {
 }
 
 func savePEMKey(fileName string, key *rsa.PrivateKey) {
+
 	outFile, err := os.Create(fileName)
-	checkError(err)
+	if err != nil {
+		fmt.Println("Fatal error ", err.Error())
+		return
+	}
+
 	defer outFile.Close()
 
 	var privateKey = &pem.Block{
@@ -41,14 +49,13 @@ func savePEMKey(fileName string, key *rsa.PrivateKey) {
 	}
 
 	err = pem.Encode(outFile, privateKey)
-	checkError(err)
+	if err != nil {
+		fmt.Println("Fatal error ", err.Error())
+		return
+	}
 }
 
 func savePublicPEMKey(fileName string, pubkey rsa.PublicKey) {
-
-	//asn1Bytes, err := asn1.Marshal(pubkey)
-	//x509.MarshalPKCS1PublicKey(&pubkey)
-	//checkError(err)
 
 	var pemkey = &pem.Block{
 		Type:  "PUBLIC KEY",
@@ -66,12 +73,5 @@ func savePublicPEMKey(fileName string, pubkey rsa.PublicKey) {
 	if err != nil {
 		fmt.Println("Fatal error ", err.Error())
 		return
-	}
-}
-
-func checkError(err error) {
-	if err != nil {
-		fmt.Println("Fatal error ", err.Error())
-		os.Exit(1)
 	}
 }
