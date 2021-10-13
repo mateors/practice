@@ -4,6 +4,7 @@ import (
 	"fmt"
 	"os"
 	"os/user"
+	"path/filepath"
 	"strconv"
 )
 
@@ -37,6 +38,23 @@ func main() {
 		fmt.Println(err)
 	}
 	fmt.Println("groupInfo:", grp.Name, grp.Gid)
+
+	//obtain working directory
+	dir, err := os.Getwd()
+	if err != nil {
+		fmt.Println(err)
+	}
+	fmt.Println("current working directory:", dir)
+	adir := filepath.Join(dir, "process") // os.Args[0]
+	fmt.Println("Application")
+
+	//create a directory
+	fmt.Println(os.ModeAppend, os.ModeDir, os.ModePerm.Perm())
+	d := filepath.Join(adir, "test")
+	if err := os.Mkdir(d, 0755); err != nil {
+		fmt.Println(err.Error())
+	}
+	fmt.Println("Directory create", d)
 
 	fmt.Println("Pages size:", os.Getpagesize())
 }
