@@ -13,6 +13,15 @@ import (
 
 var cfgPath string
 
+//We can launch the application in a Terminal
+//and use another Terminal to send signals, as follows:
+
+//kill -SIGUSR1 $(pgrep signal_reload)
+
+//kill -SIGUSR2 $(pgrep signal_reload)
+
+//kill -SIGINT $(pgrep signal_reload)
+
 func init() {
 
 	// u, err := user.Current()
