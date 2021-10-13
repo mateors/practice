@@ -33,7 +33,7 @@ func main() {
 	// }
 
 	//best way
-	//receiving signals
+	//capturing signals
 	c := make(chan os.Signal, syscall.SIGTERM)
 	signal.Notify(c)
 
