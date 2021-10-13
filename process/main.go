@@ -1,8 +1,10 @@
 package main
 
 import (
+	"bytes"
 	"fmt"
 	"os"
+	"os/exec"
 	"os/user"
 	"path/filepath"
 	"strconv"
@@ -56,5 +58,31 @@ func main() {
 	}
 	fmt.Println("Directory create", d)
 
-	fmt.Println("Pages size:", os.Getpagesize())
+	//child process, Accessing child properties
+	// cmd := exec.Command("ls", "-l")
+	// if err := cmd.Start(); err != nil {
+	// 	fmt.Println(err)
+	// 	return
+	// }
+	// fmt.Println("Cmd: ", cmd.Args[0])
+	// fmt.Println("Args:", cmd.Args[1:])
+	// fmt.Println("PID: ", cmd.Process.Pid)
+	// cmd.Wait()
+
+	//standard input
+	b := bytes.NewBuffer(nil)
+	cmd := exec.Command("ls")
+	cmd.Stdin = b
+	cmd.Stdout = os.Stdout
+	//fmt.Fprintf(b, "Hello World! I'm using this memory address: %p\n", b)
+	if err := cmd.Start(); err != nil {
+		fmt.Println(err)
+		return
+	}
+
+	//cmd.Output()
+	fmt.Println("output", b.String())
+	cmd.Wait()
+
+	//fmt.Println("Pages size:", os.Getpagesize())
 }
