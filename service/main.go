@@ -39,9 +39,38 @@ func init() {
 		cmd = os.Args[1]
 	}
 	ErrSudo = fmt.Errorf("try `sudo %s %s`", bin, cmd)
+
+	//exit codes
+	// will be the result of a
+	//modulo operation between the passed value and 256
+	// fmt.Println("Hello, playground")
+	// fmt.Println((-1) % 256)
+	// os.Exit(-1)
+
+	//One important caveat about this function's use is
+	//that deferred functions are not executed.
+	// defer fmt.Println("Hello, playground")
+	// os.Exit(0)
+
+	//If the application terminates for a panic that is not recovered, then the
+	//deferred function will be executed, but the exit code will be 2 :
+	// defer fmt.Println("Hello, playground")
+	// panic("panic")
+
 }
 
 func main() {
+
+	go func() {
+		defer fmt.Println("go end (deferred)")
+		fmt.Println("go start")
+		os.Exit(1)
+	}()
+
+	fmt.Println("main end (deferred)")
+	fmt.Println("main start")
+	time.Sleep(time.Second)
+	fmt.Println("main end")
 
 	var err error
 
