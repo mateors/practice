@@ -37,11 +37,25 @@ func main() {
 	//app-2
 	cmd2 := exec.Command("grep", "main")
 	cmd2.Stdin = iwc
-	cout2, err := cmd2.Output()
+	// cout2, err := cmd2.Output()
+	// if err != nil {
+	// 	log.Fatal(err)
+	// }
+	// fmt.Println(string(cout2))
+
+	out2, err := cmd2.StdoutPipe()
 	if err != nil {
 		log.Fatal(err)
 	}
-	fmt.Println(string(cout2))
+
+	//app-3
+	cmd3 := exec.Command("wc", "-l")
+	cmd3.Stdin = out2
+	cout3, err := cmd3.Output()
+	if err != nil {
+		log.Fatal(err)
+	}
+	fmt.Println(string(cout3))
 
 	//cmd.Wait()
 	os.Exit(0)
