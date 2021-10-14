@@ -19,45 +19,50 @@ var (
 
 func main() {
 
+	//Method-1
 	//app-1
-	cmd := exec.Command("ls", "-l")
-	iwc, err := cmd.StdoutPipe()
-	if err != nil {
-		fmt.Println(err)
-	}
-	defer iwc.Close()
-	cmd.Start()
-	//cmd.Run()
-	//defer cmd.Wait()
+	// cmd := exec.Command("ls", "-l")
+	// iwc, err := cmd.StdoutPipe()
+	// if err != nil {
+	// 	fmt.Println(err)
+	// }
+	// defer iwc.Close()
+	// cmd.Start()
 
-	// var bs = make([]byte, 1024)
-	// n, err := iwc.Read(bs)
-	// fmt.Println(n, err, string(bs))
+	// //app-2
+	// cmd2 := exec.Command("grep", "students.txt")
+	// cmd2.Stdin = iwc
 
-	//app-2
-	cmd2 := exec.Command("grep", "main")
-	cmd2.Stdin = iwc
 	// cout2, err := cmd2.Output()
 	// if err != nil {
-	// 	log.Fatal(err)
+	// 	log.Fatal("ERROR:", err)
 	// }
 	// fmt.Println(string(cout2))
+	// cmd.Wait()
 
-	out2, err := cmd2.StdoutPipe()
-	if err != nil {
-		log.Fatal(err)
-	}
+	//Method-2
+	cmd1 := exec.Command("ls", "-l")
+	cmd2 := exec.Command("grep", "students.txt")
+	cmd3 := exec.Command("wc", "-lm")
 
-	//app-3
-	cmd3 := exec.Command("wc", "-l")
-	cmd3.Stdin = out2
-	cout3, err := cmd3.Output()
-	if err != nil {
-		log.Fatal(err)
-	}
-	fmt.Println(string(cout3))
+	cmd2.Stdin, _ = cmd1.StdoutPipe()
+	cmd3.Stdin, _ = cmd2.StdoutPipe()
+	//cmd3.Stdout = os.Stdout
+	var bs bytes.Buffer
+	cmd3.Stdout = &bs
 
-	//cmd.Wait()
+	//cmd3.Start()
+	//cmd2.Start()
+	//cmd1.Run()
+	cmd1.Start()
+	cmd2.Start()
+	cmd3.Start()
+
+	cmd1.Wait()
+	cmd2.Wait()
+	cmd3.Wait()
+	fmt.Println(bs.String())
+
 	os.Exit(0)
 	//var buf bytes.Buffer
 	//iwc.Write(&buf)
