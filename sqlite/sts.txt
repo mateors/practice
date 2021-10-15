@@ -1,0 +1,4 @@
+CREATE TABLE students(fname text NOT NULL, lname text);
+CREATE TABLE course(subject text NOT NULL, instructor text);
+Moaz|Hossain
+Abu|Raihan

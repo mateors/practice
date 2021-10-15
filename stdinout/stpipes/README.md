@@ -1,4 +1,6 @@
-## Standard input out pipeline 
+## Standard input output pipeline
+Pipes are a tuple of input and output streams that are synchronously connected. They are used to connect a process input to another process output.
+
 > Connecting streams \
 > Streams in Go are an abstraction that makes it possible to see any sort of communication or data flow as a series of readers and writers
 

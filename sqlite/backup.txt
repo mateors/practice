@@ -1,0 +1,7 @@
+PRAGMA foreign_keys=OFF;
+BEGIN TRANSACTION;
+CREATE TABLE students(fname text NOT NULL, lname text);
+INSERT INTO students VALUES('Moaz','Hossain');
+INSERT INTO students VALUES('Abu','Raihan');
+CREATE TABLE course(subject text NOT NULL, instructor text);
+COMMIT;
