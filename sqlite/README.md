@@ -20,7 +20,7 @@ SQLite is built into all mobile phones and most computers and comes bundled insi
 > .output backup.txt \
 > **.dump** Render all database content as SQL into backup.txt file \
 
-> .schema ?PATTERN? \
+> **.schema ?PATTERN?** Show the CREATE statements matching PATTERN \
 > **.quit**   Exit this program
 
 ## Resource
