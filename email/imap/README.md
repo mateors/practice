@@ -6,6 +6,33 @@ RFC-3501, Old 802
 * List all of the available folders in the mailbox
 * Download a message
 
+## How to generate password for email authentication
+> echo -ne "\0username\0password" | base64
+
+## How to send email using openssl (from server using tls))
+> openssl s_client -connect mx.mostain.net:587 -starttls smtp -key /etc/letsencrypt/live/mx.mostain.net/privkey.pem -cert /etc/letsencrypt/live/mx.mostain.net/cert.pem
+
+> EHLO localhost
+
+> AUTH PLAIN AHBvc3RtYXN0ZXJAb...
+
+> MAIL FROM: postmaster@mostain.net
+
+> rcpt to: bill.rassel@gmail.com
+
+> DATA \
+From: postmaster@mostain.net \
+Subject: Welcome to mostain.net \
+
+Hello dear
+hope you are fine with the grace of almighty.
+regards
+Mostain
+
+.
+
+> when you finish just put one dot (.) and press enter.
+
 
 http://bahut.alma.ch/2015/11/roundcube-webmail-with-sqlite-on-debian.html
 
