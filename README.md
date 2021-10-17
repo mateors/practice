@@ -39,6 +39,8 @@ _spf.google.com.	95	IN	TXT
 
 Ideally your third parties will already have a generic SPF record and you can just add the include:spf.thirdparty.dom element to your record. If they don't you might well want to create your own record for them and chain it youself anyway, so that it's easy for you manage administratively.
 
+https://support.squarespace.com/hc/en-us/articles/360001280748-Verifying-third-party-domains-for-Email-Campaigns
+
 ## Reference
 * https://www.baeldung.com/linux/move-all-files-except-one
 * [SPF Record tutorial](https://serverfault.com/questions/734297/adding-an-spf-record-for-a-3rd-party-but-dont-have-one-for-my-own-domain/734308)
