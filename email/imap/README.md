@@ -67,6 +67,12 @@ http://bahut.alma.ch/2015/11/roundcube-webmail-with-sqlite-on-debian.html
 ## tag1 CAPABILITY
 This tagging ability means that it’s possible for a server to handle more than one request at the same time from a client on the same connection, and to indicate their completion by sending back the appropriate tag. In practice, many clients don’t support this ability to send concurrent requests, and simply block waiting for data to arrive on the open socket after a command is sent.
 
+
+## How to setup roundcube as our webmail client
+* http://bahut.alma.ch/2015/11/roundcube-webmail-with-sqlite-on-debian.html
+* https://kifarunix.com/install-and-setup-roundcube-webmail-on-ubuntu-20-04/
+
 ## Resource
 * https://www.nylas.com/blog/nylas-imap-therefore-i-am/
 * https://tewarid.github.io/2011/05/10/access-imap-server-from-the-command-line-using-openssl.html
+* http://www.freekb.net/Article?id=772
