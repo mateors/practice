@@ -23,7 +23,6 @@ func birthdayCakeCandles(candles []int32) int32 {
 			counter++
 		}
 	}
-
 	return counter
 }
 
