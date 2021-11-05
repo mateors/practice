@@ -14,7 +14,7 @@ import (
 )
 
 var (
-	ErrNoSuchUser    = errors.New("shadow: user entry is not present in database")
+	ErrNoSuchUser    = errors.New("shadow: user entry not found in the database")
 	ErrWrongPassword = errors.New("shadow: wrong password")
 )
 
@@ -131,6 +131,7 @@ func Lookup(name string) (*Entry, error) {
 const secsInDay = 86400
 
 func (e *Entry) IsAccountValid() bool {
+
 	if e.AcctExpiry == -1 {
 		return true
 	}
