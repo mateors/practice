@@ -47,10 +47,39 @@ func selectionSort(numbers []int32) {
 	}
 }
 
+func bubbleSort(numbers []int32) {
+
+	size := len(numbers)
+	for i := 0; i < size; i++ {
+
+		for j := i + 1; j < size-1; j++ {
+
+			fmt.Println(i, j, numbers[i], numbers[j])
+			if numbers[i] > numbers[j] { //swap
+				// temp := numbers[i]
+				// numbers[i] = numbers[j]
+				// numbers[j] = temp
+				temp := numbers[j]
+				numbers[j] = numbers[i]
+				numbers[i] = temp
+			}
+		}
+
+		//fmt.Println()
+		break
+
+	}
+
+}
+
 func main() {
 
-	numbers := []int32{5, 6, 7, 8, 9, 1}
-	selectionSort(numbers)
+	// numbers := []int32{5, 6, 7, 8, 9, 1}
+	// selectionSort(numbers)
+	// fmt.Println(numbers)
+
+	numbers := []int32{2, 7, 4, 1, 5, 3}
+	bubbleSort(numbers)
 	fmt.Println(numbers)
 
 }
