@@ -2,6 +2,7 @@ package main
 
 import "fmt"
 
+//Book :: A Common Sense Guide to Data Structures & Algorthims
 func binarySearch(array []int32, searchValue int32) int {
 
 	lowerBound := 0
@@ -27,7 +28,8 @@ func binarySearch(array []int32, searchValue int32) int {
 
 func main() {
 
-	//as it is a binary search algorithm so array must be sorted or ordered list
+	//as it is a binary search algorithm implementation
+	// so array must be sorted or ordered list
 	array := []int32{3, 17, 75, 80, 202}
 	indxPosition := binarySearch(array, 75)
 	fmt.Println(indxPosition)
