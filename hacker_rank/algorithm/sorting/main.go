@@ -72,14 +72,62 @@ func bubbleSort(numbers []int32) {
 
 }
 
+func mergeSort() {
+
+}
+
+func merge(a, b []int32) []int32 {
+
+	//var c [6]int32
+	var c = make([]int32, len(a)+len(b))
+	aSize := len(a)
+	bSize := len(b)
+
+	var i, j, k int = 0, 0, 0
+
+	for i < aSize && j < bSize {
+
+		fmt.Println(i, j, k)
+		if a[i] < b[j] {
+			c[k] = a[i]
+			//fmt.Println(a[i], "b is higher than a", b[j])
+			i++
+
+		} else {
+			//fmt.Println(b[j], "a is higher than b", a[i])
+			c[k] = b[j]
+			j++
+		}
+		k++
+	}
+
+	//fmt.Println(">>", i, j, k)
+	for i < aSize {
+		c[k] = a[i]
+		i++
+		k++
+	}
+
+	for j < bSize {
+		c[k] = b[j]
+		j++
+		k++
+	}
+	return c
+}
+
 func main() {
 
 	// numbers := []int32{5, 6, 7, 8, 9, 1}
 	// selectionSort(numbers)
 	// fmt.Println(numbers)
 
-	numbers := []int32{2, 7, 4, 1, 5, 3}
-	bubbleSort(numbers)
-	fmt.Println(numbers)
+	//numbers := []int32{2, 7, 4, 1, 5, 3}
+	//bubbleSort(numbers)
+	//fmt.Println(numbers)
+	a := []int32{1, 3, 7, 9}
+	b := []int32{2, 5, 6}
+	c := merge(a, b)
+	fmt.Println(c)
 
 }
