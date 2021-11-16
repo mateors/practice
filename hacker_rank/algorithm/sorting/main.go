@@ -232,9 +232,23 @@ func mergeSort(a []int32) {
 				continue
 			}
 			//fmt.Println(start, "-", start+last, ",", start+last, "-", start+last+last, "==>", a[lsi:lei], a[rsi:rei])
-			fmt.Println(lsi, "-", lei, ",", rsi, "-", rei, "==>", a[lsi:lei], a[rsi:rei])
+			//merge2(a[lsi:lei], a[rsi:rei], a)
+
+			res := merge(a[lsi:lei], a[rsi:rei])
+			//fmt.Println(res[0:], a[lsi:lei], lsi, rei)
+			ri := 0
+			for k := lsi; k < rei; k++ {
+				a[k] = res[ri]
+				ri++
+			}
+
+			//a[0:5] = res[0:]
+			//fmt.Printf("%T\n", res[0:])
+
+			fmt.Println(a, lsi, "-", lei, ",", rsi, "-", rei, "==>", a[lsi:lei], a[rsi:rei], "=", a)
 			//lindx = start + last + last
 			lindx = rei
+			//merge2(a[lsi:lei], a[rsi:rei], a)
 
 		}
 		last = last * 2
@@ -257,6 +271,11 @@ func main() {
 	// b := []int32{3}
 	// result := make([]int32, len(a)+len(b))
 	// merge2(a, b, result)
+	// fmt.Println(result)
+
+	// a := []int32{3, 5, 7, 9}
+	// b := []int32{2, 4, 6, 8}
+	// result := merge(a, b)
 	// fmt.Println(result)
 
 	a := []int32{9, 3, 7, 5, 6, 4, 8, 2, 1}
