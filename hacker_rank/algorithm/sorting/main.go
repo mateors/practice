@@ -219,16 +219,20 @@ func mergeSort(a []int32) {
 			// fmt.Println(a[6:7], a[7:8])
 			// fmt.Println(a[8:9])
 
-			start := lindx
-			if start+last+last > size {
-				continue
-			}
+			//start := lindx
+			// if start+last+last > size {
+			// 	continue
+			// }
 			//fmt.Println(start, "-", i+last, ",", i+last, "-", i+last+last)
 			lsi := lindx
 			lei := lsi + last
 			rsi := lei
 			rei := lei + last //start + last + last
-			fmt.Println(start, "-", start+last, ",", start+last, "-", start+last+last, "==>", a[lsi:lei], a[rsi:rei])
+			if rei > size {
+				continue
+			}
+			//fmt.Println(start, "-", start+last, ",", start+last, "-", start+last+last, "==>", a[lsi:lei], a[rsi:rei])
+			fmt.Println(lsi, "-", lei, ",", rsi, "-", rei, "==>", a[lsi:lei], a[rsi:rei])
 			//lindx = start + last + last
 			lindx = rei
 
