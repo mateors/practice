@@ -1,6 +1,8 @@
 package main
 
-import "fmt"
+import (
+	"fmt"
+)
 
 //find the minimum number from an array
 func findMin(numbers []int32) int32 {
@@ -115,78 +117,62 @@ func merge(a, b []int32) []int32 {
 
 //a,b=input array (unsorted)
 //c = output array (sorted)
-func merge2(a, b, c []int32) {
+func merge2(aa, bb []int32, c *[]int32) {
 
 	//var c [6]int32
 	//var c = make([]int32, len(a)+len(b))
-	aSize := len(a)
-	bSize := len(b)
+
+	aSize := len(aa)
+	bSize := len(bb)
+	fmt.Println("*", aa, bb, c)
 
 	var i, j, k int = 0, 0, 0
+
+	fmt.Println("#a,b:", aa, bb)
 
 	for i < aSize && j < bSize {
 
 		//fmt.Println(i, j, k)
-		if a[i] < b[j] {
-			c[k] = a[i]
-			//fmt.Println(a[i], "b is higher than a", b[j])
+
+		if aa[i] < bb[j] {
+			fmt.Println(bb[j], "b is higher than a", aa[i])
+			(*c)[k] = aa[i]
 			i++
 
 		} else {
-			//fmt.Println(b[j], "a is higher than b", a[i])
-			c[k] = b[j]
+			//fmt.Println(a[i], "a is higher than b", b[j])
+			fmt.Println("aa,bb:", aa, bb)
+			fmt.Println(bb[j], "b is less than a", aa[i], aa, bb, i, j)
+			(*c)[k] = bb[j] //*****
+			fmt.Println("aa,bb:", aa, bb)
 			j++
 		}
 		k++
+
+		fmt.Println("a,b:", aa, bb)
 	}
 
-	//fmt.Println(">>", i, j, k)
+	fmt.Println(">>", i, j, k, "Array:", aa, bb)
 	for i < aSize {
-		c[k] = a[i]
+		//fmt.Println(a[i])
+		(*c)[k] = aa[i]
+		fmt.Println("i<aSize:", i, aa[i], c)
 		i++
 		k++
 	}
 
 	for j < bSize {
-		c[k] = b[j]
+		(*c)[k] = bb[j]
 		j++
 		k++
 	}
+	//fmt.Println("merge:", c)
 }
 
 func mergeSort(a []int32) {
 
 	//var b = make([]int32, len(a))
-	size := len(a)
-
-	// for i := 0; i < len(a); i += 2 {
-
-	// 	if i+1 < size {
-	// 		fmt.Println(a[i], a[i+1])
-	// 		//merge(a, b []int32)
-	// 		if a[i] < a[i+1] {
-	// 			b[i] = a[i]
-	// 			b[i+1] = a[i+1]
-	// 		} else {
-	// 			b[i] = a[i+1]
-	// 			b[i+1] = a[i]
-	// 		}
-
-	// 	} else if i+1 == size {
-	// 		fmt.Println("*", a[size-1])
-	// 		b[size-1] = a[size-1]
-	// 	}
-	// 	fmt.Println("1=>", b)
-	// }
-
-	//2nd try
-	//var m, n, p int
-
-	fmt.Println(a[0:1], a[1:2])
-	fmt.Println(a[2:3], a[3:4])
-	fmt.Println(a[4:5], a[5:6])
-	fmt.Println(a[6:7], a[7:8])
-	fmt.Println(a[8:9])
+	size := 9 //len(a)
 	var last int = 1
 
 	for last < 5 {
@@ -194,36 +180,6 @@ func mergeSort(a []int32) {
 		lindx := 0
 		for i := 0; i < size; i += last {
 
-			// m := i
-			// start := i
-			// if last > size {
-			// 	last = size
-			// }
-			// end := start + last
-			// if end > size {
-			// 	end = size
-			// }
-			// left := a[start:end]
-			// right := a[m+last]
-			// if end > size {
-			// 	continue
-			// }
-			//fmt.Println(m, start, end)
-			//fmt.Println(m, left, right)
-			//fmt.Println(a[i:i+last], a[i+last:i+last+last])
-			//if (i>1){}
-
-			// fmt.Println(a[0:1], a[1:2])
-			// fmt.Println(a[2:3], a[3:4])
-			// fmt.Println(a[4:5], a[5:6])
-			// fmt.Println(a[6:7], a[7:8])
-			// fmt.Println(a[8:9])
-
-			//start := lindx
-			// if start+last+last > size {
-			// 	continue
-			// }
-			//fmt.Println(start, "-", i+last, ",", i+last, "-", i+last+last)
 			lsi := lindx
 			lei := lsi + last
 			rsi := lei
@@ -231,25 +187,19 @@ func mergeSort(a []int32) {
 			if rei > size {
 				continue
 			}
-			//fmt.Println(start, "-", start+last, ",", start+last, "-", start+last+last, "==>", a[lsi:lei], a[rsi:rei])
-			//merge2(a[lsi:lei], a[rsi:rei], a)
+
+			//aa := make([]int32, len(a[lsi:lei]))
+			//merge2(a[lsi:lei], a[rsi:rei], &a) //error prone approach because of slice gotchas
 
 			res := merge(a[lsi:lei], a[rsi:rei])
-			//fmt.Println(res[0:], a[lsi:lei], lsi, rei)
 			ri := 0
 			for k := lsi; k < rei; k++ {
 				a[k] = res[ri]
 				ri++
 			}
-
-			//a[0:5] = res[0:]
-			//fmt.Printf("%T\n", res[0:])
-
 			fmt.Println(a, lsi, "-", lei, ",", rsi, "-", rei, "==>", a[lsi:lei], a[rsi:rei], "=", a)
-			//lindx = start + last + last
 			lindx = rei
 			//merge2(a[lsi:lei], a[rsi:rei], a)
-
 		}
 		last = last * 2
 	}
@@ -277,6 +227,14 @@ func main() {
 	// b := []int32{2, 4, 6, 8}
 	// result := merge(a, b)
 	// fmt.Println(result)
+
+	// a := []int32{9}
+	// b := []int32{3}
+	// c := []int32{9, 3, 7, 5, 6, 4, 8, 2, 1}
+
+	// fmt.Println(c)
+	// merge2(a, b, &c)
+	// fmt.Println(c)
 
 	a := []int32{9, 3, 7, 5, 6, 4, 8, 2, 1}
 	mergeSort(a)
