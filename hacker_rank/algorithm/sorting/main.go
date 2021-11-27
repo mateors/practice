@@ -128,35 +128,35 @@ func merge2(aa, bb []int32, c *[]int32) {
 
 	var i, j, k int = 0, 0, 0
 
-	fmt.Println("#a,b:", aa, bb)
+	//fmt.Println("#a,b:", aa, bb)
 
 	for i < aSize && j < bSize {
 
 		//fmt.Println(i, j, k)
 
 		if aa[i] < bb[j] {
-			fmt.Println(bb[j], "b is higher than a", aa[i])
+			//fmt.Println(bb[j], "b is higher than a", aa[i], "**", len(*c), cap(*c))
 			(*c)[k] = aa[i]
 			i++
 
 		} else {
 			//fmt.Println(a[i], "a is higher than b", b[j])
-			fmt.Println("aa,bb:", aa, bb)
-			fmt.Println(bb[j], "b is less than a", aa[i], aa, bb, i, j)
+			//fmt.Println("aa,bb:", aa, bb)
+			//fmt.Println(bb[j], "b is less than a", aa[i], aa, bb, len(*c), cap(*c))
 			(*c)[k] = bb[j] //*****
-			fmt.Println("aa,bb:", aa, bb)
+			//fmt.Println("aa,bb:", aa, bb, ">", j, len(*c), cap(*c))
 			j++
 		}
 		k++
 
-		fmt.Println("a,b:", aa, bb)
+		//fmt.Println("a,b:", aa, bb)
 	}
 
-	fmt.Println(">>", i, j, k, "Array:", aa, bb)
+	fmt.Println(">>", i, j, k, aSize, bSize, "Array:", aa, bb)
 	for i < aSize {
-		//fmt.Println(a[i])
+		//fmt.Println(aa[i], *c[])
 		(*c)[k] = aa[i]
-		fmt.Println("i<aSize:", i, aa[i], c)
+		//fmt.Println("i<aSize:", i, aa[i], c)
 		i++
 		k++
 	}
@@ -166,7 +166,7 @@ func merge2(aa, bb []int32, c *[]int32) {
 		j++
 		k++
 	}
-	//fmt.Println("merge:", c)
+	fmt.Println("merge:", c)
 }
 
 func mergeSort(a []int32) {
@@ -189,14 +189,15 @@ func mergeSort(a []int32) {
 			}
 
 			//aa := make([]int32, len(a[lsi:lei]))
-			//merge2(a[lsi:lei], a[rsi:rei], &a) //error prone approach because of slice gotchas
+			merge2(a[lsi:lei], a[rsi:rei], &a) //error prone approach because of slice gotchas
+			// /https://codefibershq.com/blog/golang-why-appending-to-slice-is-dangerous-common-slice-gotchas
 
-			res := merge(a[lsi:lei], a[rsi:rei])
-			ri := 0
-			for k := lsi; k < rei; k++ {
-				a[k] = res[ri]
-				ri++
-			}
+			// res := merge(a[lsi:lei], a[rsi:rei])
+			// ri := 0
+			// for k := lsi; k < rei; k++ {
+			// 	a[k] = res[ri]
+			// 	ri++
+			// }
 			fmt.Println(a, lsi, "-", lei, ",", rsi, "-", rei, "==>", a[lsi:lei], a[rsi:rei], "=", a)
 			lindx = rei
 			//merge2(a[lsi:lei], a[rsi:rei], a)
@@ -236,7 +237,33 @@ func main() {
 	// merge2(a, b, &c)
 	// fmt.Println(c)
 
-	a := []int32{9, 3, 7, 5, 6, 4, 8, 2, 1}
-	mergeSort(a)
+	//a := []int32{9, 3, 7, 5, 6, 4, 8, 2, 1}
+	//mergeSort(a)
+	var i, j, k int
+	a := []int32{9}
+	a = append(a, 7)
+	fmt.Println(a, len(a), cap(a))
+	a[1] = 6
+	fmt.Println(a, len(a), cap(a))
+
+	b := []int32{3}
+
+	c := []int32{9, 3, 2, 5, 8, 0, 4, 6, 1}
+
+	if a[i] > b[j] {
+		fmt.Println(a[i], b[j], c)
+		c[k] = b[j]
+		k++
+		j++
+		fmt.Println(c)
+	}
+
+	if i < len(a) {
+		c[k] = a[i]
+		i++
+		k++
+	}
+
+	fmt.Println(c)
 
 }
