@@ -9,6 +9,22 @@ import (
 	"github.com/zcalusic/sysinfo"
 )
 
+func GetMachineID() (machineid string) {
+
+	current, err := user.Current()
+	if err != nil {
+		log.Fatal(err)
+	}
+	if current.Uid != "0" {
+		log.Fatal("requires superuser privilege")
+		return ""
+	}
+	var si sysinfo.SysInfo
+	si.GetSysInfo()
+	machineid = si.Node.MachineID
+	return
+}
+
 func main() {
 
 	current, err := user.Current()
