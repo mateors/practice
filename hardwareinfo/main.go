@@ -1,7 +1,6 @@
 package main
 
 import (
-	"encoding/json"
 	"fmt"
 	"log"
 	"os/user"
@@ -27,23 +26,26 @@ func GetMachineID() (machineid string) {
 
 func main() {
 
-	current, err := user.Current()
-	if err != nil {
-		log.Fatal(err)
-	}
+	// current, err := user.Current()
+	// if err != nil {
+	// 	log.Fatal(err)
+	// }
 
-	if current.Uid != "0" {
-		log.Fatal("requires superuser privilege")
-	}
+	// if current.Uid != "0" {
+	// 	log.Fatal("requires superuser privilege")
+	// }
 
-	var si sysinfo.SysInfo
+	// var si sysinfo.SysInfo
 
-	si.GetSysInfo()
+	// si.GetSysInfo()
 
-	data, err := json.MarshalIndent(&si, "", "  ")
-	if err != nil {
-		log.Fatal(err)
-	}
+	// data, err := json.MarshalIndent(&si, "", "  ")
+	// if err != nil {
+	// 	log.Fatal(err)
+	// }
 
-	fmt.Println(string(data))
+	// fmt.Println(string(data))
+
+	machineid := GetMachineID()
+	fmt.Println("machineid:", machineid)
 }
